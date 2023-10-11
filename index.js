@@ -3,6 +3,7 @@ const morgan = require("morgan");
 
 const app = express();
 app.use(morgan("common"));
+app.use(express.static("public"));
 
 let topMovies = [
   {
@@ -60,10 +61,6 @@ let topMovies = [
 //GET requests
 app.get("/", (req, res) => {
   res.send("Welcome to Cody's Movie Heaven!");
-});
-
-app.get("/documentation", (req, res) => {
-  res.sendFile("public/documentation.html", { root: __dirname });
 });
 
 app.get("/topMovies", (req, res) => {
