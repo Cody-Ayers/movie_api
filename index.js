@@ -124,11 +124,6 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {sessi
 
 //DELETE movie from users favorites
 app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
-
-  if(req.user.Username !== req.params.Username){
-    return res.status(400).send('Permission Denied');
-  }
-
   await Users.findOneAndUpdate({ Username: req.params.Username }, { $pull: { Favorites: req.params.MovieID }
     },
     { new: true}) //This line makes sure that the updated document is returned
@@ -143,11 +138,6 @@ app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
 
 //DELETE user by username
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false}), async (req, res) => {
-  
-  if(req.user.Username !== req.params.Username){
-    return res.status(400).send('Permission Denied');
-  }
-
   await Users.findOne({ Username: req.params.Username })
     .then((user) => {
       if(!user) {
