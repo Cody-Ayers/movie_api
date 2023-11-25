@@ -61,14 +61,56 @@
               <td>return JSON object with details about a director</td>    
           </tr>
 
+
           <tr>
-              <td>Allow new users to register</td>    
-              <td>/users</td>    
-              <td>POST</td>    
-              <td>none</td>    
-              <td>New user input info (username,email and password) in JSON format</td>    
-              <td>New user info that was added in JSON format</td>    
-          </tr>
+            <td>Allow new users to register</td>    
+            <td>/users</td>    
+            <td>POST</td>    
+            <td>none</td>    
+            <td>New user input info (username,email and password) in JSON format
+                <code>
+                    {
+                        "Username": string,
+                        "Password": string,
+                        "Email": string,
+                        "Birthday": date
+                    }
+                </code>
+            </td>    
+            <td>New user info that was added in JSON format
+                <code>
+                    {
+                        "_id": "655bcf98e860f03d04debe16",
+                        "username": "Sydney_Crosby",
+                        "password": "Sid_the_kid",
+                        "email": "Sydthekid87@example.com",
+                        "birthday": "1987-08-07T00:00:00.000Z",
+                        
+                    },
+                </code>
+            </td>    
+            </tr>
+
+          <tr>
+            <td>Return data about single user by username</td>    
+            <td>/users/:Username</td>    
+            <td>GET</td>    
+            <td>:Username</td>    
+            <td>none</td>    
+            <td>return JSON object with data about that Username
+                <code>
+                    {
+                        "_id": "65616fd9edea72e2b146602a",
+                        "Username": "Testing45",
+                        "Password": "TEtioe",
+                        "Email": "wnbjv@test.com",
+                        "Birthday": "1987-06-16T06:00:00.000Z",
+                        "Favorites": [],
+                        "__v": 0
+                    },
+                </code>
+            </td>    
+            </tr>
 
           <tr>
               <td>Allow users to update their username</td>    
