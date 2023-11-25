@@ -19,6 +19,7 @@ const app = express();
     res.send('Welcome to CodysFlix!');
   });
 
+  app.use(express.static('public'));
 // USER 
 // CREATE USER
 app.post('/users', async (req, res) => {
