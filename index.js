@@ -123,7 +123,7 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {sessi
 });
 
 //DELETE movie from users favorites
-app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
+app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.findOneAndUpdate({ Username: req.params.Username }, { $pull: { Favorites: req.params.MovieID }
     },
     { new: true}) //This line makes sure that the updated document is returned
