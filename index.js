@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
-
+const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
@@ -42,9 +42,25 @@ require('./passport');
   });
 
   app.use(express.static('public'));
+
 // USER 
 // CREATE USER
-app.post('/users', async (req, res) => {
+app.post('/users',
+  // Validation Logid
+  [
+    check('Username', 'Username is required').isLength({min:5}),
+    check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+  ],
+  async (req, res) => {
+    // Check the validation object for errors
+    let errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
   let hashedPassword = Users.hashPassword(req.body.Password);
   await Users.findOne({Username: req.body.Username}) // Search to see if a user with the requested username already exists
     .then((user) => {
@@ -97,7 +113,20 @@ app.get('/users/:Username',passport.authenticate('jwt', { session: false}), asyn
 });
 
 // UPDATE by USERNAME
-app.put('/users/:Username', passport.authenticate('jwt', { session: false}), async (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false}), 
+[
+  check('Username', 'Username is required').isLength({min:5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required').not().isEmpty(),
+  check('Email', 'Email does not appear to be valid').isEmail()
+],
+async (req, res) => {
+
+  let errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
 
   if(req.user.Username !== req.params.Username){
     return res.status(400).send('Permission Denied');
@@ -226,6 +255,7 @@ app.get('/movies/directors/:directorName', passport.authenticate('jwt', {session
     });
 });
 
-app.listen(8080, () => {
-  console.log("movieAPI is listening on port 8080.");
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port);
 });
