@@ -13,7 +13,6 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // mongoose.connect('mongodb://localhost:27017/cfdb', { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.connect('mongodb+srv://cayers21:Famof4cecs@codysdbs.ivk4cmz.mongodb.net/cfdb?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connect( process.env.uri_connect, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
