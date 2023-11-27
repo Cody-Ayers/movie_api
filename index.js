@@ -6,6 +6,9 @@ const { check, validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
+const passport = require('passport');
+require('./passport');
+
 const Movies = Models.Movie;
 const Users = Models.User;
 
@@ -19,7 +22,6 @@ const app = express();
   app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require('cors');
-
 // let allowedOrgins = ['http://localhost:8080', 'http://testsite.com'];
 
 /*app.use(cors({
@@ -32,13 +34,10 @@ const cors = require('cors');
     return callback(null, true);
   }
 }));*/
-
 app.use(cors());
 
 let auth = require('./auth')(app);
 
-const passport = require('passport');
-require('./passport');
 
   app.get('/', (req, res) => {
     res.send('Welcome to CodysFlix!');
@@ -49,7 +48,7 @@ require('./passport');
 // USER 
 // CREATE USER
 app.post('/users',
-  // Validation Logid
+  // Validation Login
   [
     check('Username', 'Username is required').isLength({min:5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
