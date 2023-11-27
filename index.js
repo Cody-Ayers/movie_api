@@ -15,6 +15,23 @@ const app = express();
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
+const cors = require('cors');
+
+// let allowedOrgins = ['http://localhost:8080', 'http://testsite.com'];
+
+/*app.use(cors({
+  origin: (origin, callback) => {
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){ // If a specific origin isn't found on the list of allowed origins
+      let message = 'The CORS policy for this application doesn't allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
+}));*/
+
+app.use(cors());
+
 let auth = require('./auth')(app);
 
 const passport = require('passport');
@@ -28,15 +45,17 @@ require('./passport');
 // USER 
 // CREATE USER
 app.post('/users', async (req, res) => {
-  await Users.findOne({Username: req.body.Username})
+  let hashedPassword = Users.hashPassword(req.body.Password);
+  await Users.findOne({Username: req.body.Username}) // Search to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
+        // If the user is found, send a response that it already exists
         return res.status(400).send(req.body.Username + 'already exists');
       } else {
         Users
           .create({
             Username: req.body.Username,
-            Password: req.body.Password,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
@@ -124,6 +143,11 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {sessi
 
 //DELETE movie from users favorites
 app.delete('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false }), async (req, res) => {
+
+  if(req.user.Username !== req.params.Username){
+    return res.status(400).send('Permission Denied');
+  }
+
   await Users.findOneAndUpdate({ Username: req.params.Username }, { $pull: { Favorites: req.params.MovieID }
     },
     { new: true}) //This line makes sure that the updated document is returned
