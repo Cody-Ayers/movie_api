@@ -1,5 +1,5 @@
 const passport = require('passport'),
-    LocalStrategy = require ('passport-local').Strategy,
+    LocalStrategy = require('passport-local').Strategy,
     Models = require('./models'),
     passportJWT = require('passport-jwt');
 
@@ -15,27 +15,27 @@ passport.use(
         },
         async (username, password, callback) => {
             console.log(`${username} ${password}`);
-            await Users.findOne({Username: username})
-            .then((user) => {
-                if (!user) {
-                    console.log('Incorrect Username');
-                    return callback(null, false, {
-                        message: 'Incorrect Username and Password',
-                    });
-                }
-                if (!user.validatePassword(password)) {
-                    console.log('incorrect password');
-                    return callback(null, false, {message: 'Incorrect Password.'});
-                }
-                console.log('Finished');
-                return callback(null, user);
-            })
-            .catch((error) => {
-                if(error) {
-                    console.log(error);
-                    return callback(error);
-                }
-            })
+            await Users.findOne({ Username: username })
+                .then((user) => {
+                    if (!user) {
+                        console.log('Incorrect Username');
+                        return callback(null, false, {
+                            message: 'Incorrect Username and Password',
+                        });
+                    }
+                    if (!user.validatePassword(password)) {
+                        console.log('incorrect password');
+                        return callback(null, false, { message: 'Incorrect Password.' });
+                    }
+                    console.log('Finished');
+                    return callback(null, user);
+                })
+                .catch((error) => {
+                    if (error) {
+                        console.log(error);
+                        return callback(error);
+                    }
+                })
         }
     )
 );
