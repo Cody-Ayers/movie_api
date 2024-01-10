@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require("cors");
-let allowedOrgins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://codys-flix.netlify.app'];
+/*let allowedOrgins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:1234', 'https://codys-flix.netlify.app'];
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -34,7 +34,9 @@ app.use(cors({
         }
         return callback(null, true);
     }
-}));
+}));*/
+
+app.use(cors());
 
 let auth = require("./auth")(app);
 
