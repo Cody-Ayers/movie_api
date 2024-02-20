@@ -12,7 +12,7 @@ require("./passport");
 const Movies = Models.Movie;
 const Users = Models.User;
 
-// mongoose.connect('mongodb://localhost:27017/cfdb', { useNewUrlParser: true, useUnifiedTopology: true });
+/** mongoose.connect('mongodb://localhost:27017/cfdb', { useNewUrlParser: true, useUnifiedTopology: true }); */
 mongoose.connect(process.env.uri_connect, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -46,11 +46,9 @@ app.get("/", (req, res) => {
 
 app.use(express.static("public"));
 
-// USER
-// CREATE USER
+/** This section allows you to create a profile */
 app.post(
   "/users",
-  // Validation Login
   [
     check("Username", "Username is required").isLength({ min: 5 }),
     check(
@@ -97,7 +95,6 @@ app.post(
   }
 );
 
-// READ Users
 app.get(
   "/users",
   passport.authenticate("jwt", { session: false }),
@@ -113,7 +110,6 @@ app.get(
   }
 );
 
-// READ by USERNAME
 app.get(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -129,7 +125,7 @@ app.get(
   }
 );
 
-// UPDATE by USERNAME
+/** UPDATE by USERNAME */
 app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -165,7 +161,7 @@ app.put(
         },
       },
       { new: true }
-    ) // This line makes sure that the updated document is returned
+    )
       .then((updatedUser) => {
         res.json(updatedUser);
       })
@@ -176,7 +172,7 @@ app.put(
   }
 );
 
-// Add movie to users favorites list
+/**  Add movie to users favorites list */
 app.post(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -191,7 +187,7 @@ app.post(
         $push: { Favorites: req.params.MovieID },
       },
       { new: true }
-    ) //This line makes sure that the updated document is returned
+    )
       .then((updatedUser) => {
         res.json(updatedUser);
       })
@@ -202,7 +198,7 @@ app.post(
   }
 );
 
-//DELETE movie from users favorites
+/** This section allows you to delete a movie from your favorites list*/
 app.delete(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -228,7 +224,7 @@ app.delete(
   }
 );
 
-//DELETE user by username
+/** This is used to delete the user by username */
 app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -248,9 +244,7 @@ app.delete(
   }
 );
 
-// MOVIE
-
-// Return ALL movies to the user
+/** Return ALL movies to the user */
 app.get(
   "/movies",
   passport.authenticate("jwt", { session: false }),
@@ -266,7 +260,7 @@ app.get(
   }
 );
 
-// Return (title, description, genre, director, imgurl, featured) by title
+/** Return (title, description, genre, director, imgurl, featured) by title */
 app.get(
   "/movies/:Title",
   passport.authenticate("jwt", { session: false }),
@@ -282,7 +276,7 @@ app.get(
   }
 );
 
-// Return description about genre by name/title
+/**  Return description about genre by name/title */
 app.get(
   "/movies/genre/:genreName",
   passport.authenticate("jwt", { session: false }),
@@ -298,7 +292,7 @@ app.get(
   }
 );
 
-// Return information about Director (Bio, birthyear, deathyear)
+/** Return information about Director (Bio, birthyear, deathyear) */
 app.get(
   "/movies/directors/:directorName",
   passport.authenticate("jwt", { session: false }),
