@@ -1,4 +1,8 @@
-const jwtSecret = 'your_jwt_secret';
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+    throw new Error('JWT_SECRET environment variable is not set');
+}
 
 const jwt = require('jsonwebtoken'),
     passport = require('passport');
@@ -26,7 +30,7 @@ module.exports = (router) => {
                 if (error) {
                     res.send(error);
                 }
-                let token = generateJWTToken(user.toJSON());
+                let token = generateJWTToken({ _id: user._id, Username: user.Username, Email: user.Email });
                 return res.json({ user, token });
             });
         })(req, res);
