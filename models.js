@@ -35,6 +35,14 @@ userSchema.methods.validatePassword = function (password) {
     return bcrypt.compareSync(password, this.Password);
 };
 
+// Never send the password hash in API responses (res.json uses toJSON)
+userSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        delete ret.Password;
+        return ret;
+    }
+});
+
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
 
